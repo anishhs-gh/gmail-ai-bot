@@ -17,7 +17,8 @@
     "@google-cloud/secret-manager": "^5.6.0",
     "@google/generative-ai": "^0.15.0",
     "express": "^4.19.2",
-    "google-auth-library": "^9.11.0"
+    "google-auth-library": "^9.11.0",
+    "googleapis": "^171.4.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
