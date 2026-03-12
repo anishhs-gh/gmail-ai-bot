@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Local secrets & keys
+.env
+.env.*
+*.json
+!package.json
+!package-lock.json
+
+# GCP key files
+gmail-sa-key.json
+oauth_client.json
+gmail_oauth_creds.json
+
+# Test artifacts
+coverage/
+
+# Misc
+get_token.js

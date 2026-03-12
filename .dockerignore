@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+*.test.js
+**/__tests__/
+.git/
+coverage/
+*.md
+req.txt
