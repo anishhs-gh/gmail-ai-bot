@@ -81,7 +81,7 @@ async function processHistoryId(notificationHistoryId) {
   }
 
   if (messageIds.length === 0) {
-    logger.debug('No new messages in history', { historyId });
+    logger.debug('No new messages in history', { historyId: notificationHistoryId });
     return;
   }
 
