@@ -2,7 +2,7 @@
 
 const express = require('express');
 const { loadSecrets } = require('./utils/secretManager');
-const { setupWatch, fetchNewMessages, fetchMessage } = require('./services/gmailService');
+const { setupWatch, fetchNewMessages, fetchMessage, updateStoredHistoryId, getStoredHistoryId } = require('./services/gmailService');
 const { parseMessage } = require('./services/emailParser');
 const { shouldProcess } = require('./services/filterEngine');
 const { decide } = require('./services/geminiService');
@@ -51,15 +51,33 @@ app.post('/webhook', validatePubSubToken, async (req, res) => {
 // Config management API
 app.use('/api/v1', apiRoutes);
 
-async function processHistoryId(historyId) {
-  logger.info('Processing Gmail history', { historyId });
+async function processHistoryId(notificationHistoryId) {
+  logger.info('Processing Gmail history', { historyId: notificationHistoryId });
+
+  // Use the last stored historyId as startHistoryId (Gmail returns records
+  // strictly greater than startHistoryId, so using the notification's own
+  // historyId would always return nothing)
+  let startHistoryId;
+  try {
+    startHistoryId = await getStoredHistoryId();
+  } catch (err) {
+    logger.warn('Could not read stored historyId, falling back to notification historyId', { error: err.message });
+    startHistoryId = notificationHistoryId;
+  }
 
   let messageIds;
   try {
-    messageIds = await fetchNewMessages(historyId);
+    messageIds = await fetchNewMessages(startHistoryId);
   } catch (err) {
-    logger.error('Failed to fetch new messages', err, { historyId });
+    logger.error('Failed to fetch new messages', err, { historyId: startHistoryId });
     return;
+  }
+
+  // Update stored historyId to the notification's value so next call starts from here
+  try {
+    await updateStoredHistoryId(notificationHistoryId);
+  } catch (err) {
+    logger.warn('Failed to update stored historyId', { error: err.message });
   }
 
   if (messageIds.length === 0) {

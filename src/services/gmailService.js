@@ -121,4 +121,24 @@ async function sendMessage(rawEmailBase64, threadId) {
   return res.data;
 }
 
-module.exports = { setupWatch, fetchNewMessages, fetchMessage, sendMessage };
+/**
+ * Read the last stored historyId from Firestore.
+ */
+async function getStoredHistoryId() {
+  const doc = await getFirestore().collection(COLLECTIONS.watchState).doc('current').get();
+  if (!doc.exists) throw new Error('No stored historyId found');
+  return doc.data().historyId;
+}
+
+/**
+ * Update the stored historyId in Firestore after processing.
+ */
+async function updateStoredHistoryId(historyId) {
+  await writeWithRetry(
+    getFirestore().collection(COLLECTIONS.watchState).doc('current'),
+    { historyId, updatedAt: new Date() },
+    { merge: true }
+  );
+}
+
+module.exports = { setupWatch, fetchNewMessages, fetchMessage, sendMessage, getStoredHistoryId, updateStoredHistoryId };
