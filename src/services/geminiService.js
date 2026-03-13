@@ -18,7 +18,7 @@ function getGenAI() {
  * Sends email to Gemini and returns { intent, shouldReply, reply, confidence }
  */
 async function decide(parsedEmail, config) {
-  const model = getGenAI().getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = getGenAI().getGenerativeModel({ model: 'gemini-3.1-flash-lite-preview' });
 
   const emailContent = buildEmailContent(parsedEmail);
   const prompt = `${config.systemPrompt}\n\nEmail content:\n\n${emailContent}`;
