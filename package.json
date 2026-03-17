@@ -1,6 +1,7 @@
 {
   "name": "gmail-ai-bot",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "Production-ready Gmail AI Auto-Reply Bot using Gemini on GCP",
   "main": "src/index.js",
   "scripts": {
