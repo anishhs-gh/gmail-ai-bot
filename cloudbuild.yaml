@@ -4,8 +4,6 @@ steps:
     args:
       - build
       - '-t'
-      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_SERVICE_NAME}:${SHORT_SHA}'
-      - '-t'
       - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_SERVICE_NAME}:latest'
       - '.'
 
@@ -23,11 +21,11 @@ steps:
       - run
       - deploy
       - '${_SERVICE_NAME}'
-      - '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_SERVICE_NAME}:${SHORT_SHA}'
+      - '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_SERVICE_NAME}:latest'
       - '--region=${_REGION}'
       - '--platform=managed'
       - '--service-account=${_SERVICE_ACCOUNT}'
-      - '--set-env-vars=GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GMAIL_USER_EMAIL=${_GMAIL_USER_EMAIL},PUBSUB_TOPIC=${_PUBSUB_TOPIC},PUBSUB_AUDIENCE=https://${_SERVICE_NAME}-${_CLOUD_RUN_SUFFIX}.run.app'
+      - '--set-env-vars=GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GMAIL_USER_EMAIL=${_GMAIL_USER_EMAIL},PUBSUB_TOPIC=${_PUBSUB_TOPIC},PUBSUB_AUDIENCE=${_PUBSUB_AUDIENCE}'
       - '--min-instances=0'
       - '--max-instances=10'
       - '--memory=512Mi'
@@ -40,10 +38,10 @@ substitutions:
   _REGION: us-central1
   _SERVICE_NAME: gmail-ai-bot
   _AR_REPO: gmail-ai-bot
-  _SERVICE_ACCOUNT: gmail-ai-bot-sa@${PROJECT_ID}.iam.gserviceaccount.com
+  _SERVICE_ACCOUNT: gmail-ai-bot-sa@gmail-ai-bot-490018.iam.gserviceaccount.com
   _GMAIL_USER_EMAIL: you@yourdomain.com
   _PUBSUB_TOPIC: projects/${PROJECT_ID}/topics/gmail-notifications
-  _CLOUD_RUN_SUFFIX: uc.a
+  _PUBSUB_AUDIENCE: https://gmail-ai-bot-vqcfpb6dsq-uc.a.run.app/webhook
 
 options:
   logging: CLOUD_LOGGING_ONLY
